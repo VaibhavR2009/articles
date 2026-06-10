@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 440px;
+            margin: 100px auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .auth-container h2 {
+            margin-bottom: 35px;
+            color: #2d3748;
+            text-align: center;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-google {
+            background: white;
+            color: #2d3748;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-google:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 24px;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .toggle-auth a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard-header {
+            background: white;
+            border-radius: 20px;
+            padding: 24px 30px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .profile-pic {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            font-weight: 700;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info .name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .profile-info .credentials {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+        }
+
+        .tab {
+            padding: 12px 28px;
+            background: #f7fafc;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            color: #4a5568;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .editor-container {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 14px;
+            background: #f7fafc;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .toolbar-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .toolbar-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .editor-content {
+            min-height: 450px;
+            padding: 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .editor-content:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .editor-content img {
+            max-width: 100%;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 16px auto;
+        }
+
+        .editor-content img:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .editor-content img.selected {
+            outline: 3px solid #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        /* --- REPLACE START: Image Wrapper & Handles CSS --- */
+        .img-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 10px;
+            user-select: none; /* Prevents text highlighting while dragging */
+            -webkit-user-select: none;
+            transition: outline 0.1s;
+            line-height: 0; /* Fixes gap at bottom of inline-block */
+        }
+
+        .img-wrapper.selected {
+            outline: 3px solid #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            z-index: 10;
+        }
+
+        .img-wrapper img {
+            display: block; /* Removes bottom spacing */
+            max-width: 100%;
+            pointer-events: none; /* Allows click to pass through to wrapper */
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 14px; /* Larger hit area */
+            height: 14px;
+            background: #667eea;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .img-wrapper.selected .resize-handle {
+            display: block;
+        }
+
+        /* Adjusted positions to be centered on the border */
+        .resize-handle.nw { top: -7px; left: -7px; cursor: nw-resize; }
+        .resize-handle.ne { top: -7px; right: -7px; cursor: ne-resize; }
+        .resize-handle.sw { bottom: -7px; left: -7px; cursor: sw-resize; }
+        .resize-handle.se { bottom: -7px; right: -7px; cursor: se-resize; }
+        /* --- REPLACE END --- */
+        .post-btn-container {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .feed-container {
+            display: none;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+
+        .article-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .article-description {
+            color: #4a5568;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            margin: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            color: #cbd5e0;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #667eea;
+        }
+
+        .view-more-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 14px 36px;
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .view-more-btn:hover {
+            background: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .no-articles {
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            padding: 60px;
+            font-weight: 500;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.5);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .profile-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .article-view {
+            background: white;
+            border-radius: 20px;
+            padding: 45px;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .article-view-header {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .article-view-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 18px;
+            color: #2d3748;
+            line-height: 1.3;
+        }
+
+        .article-view-content {
+            line-height: 1.9;
+            font-size: 17px;
+            color: #2d3748;
+            margin-bottom: 50px;
+            padding-bottom: 50px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .article-view-content img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 24px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .delete-article-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 12px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .delete-article-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+        }
+
+        .saving-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: none;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .saving-indicator.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .comments-section {
+            margin-top: 50px;
+        }
+
+        .comments-header {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #2d3748;
+        }
+
+        .comment-form {
+            background: #f7fafc;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 35px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
+            font-size: 28px;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .star.active, .star:hover {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+
+        .comment-item {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 15px;
+        }
+
+        .comment-stars {
+            color: #fbbf24;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .comment-text {
+            color: #4a5568;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .comment-reply-btn, .show-replies-btn {
+            padding: 8px 16px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .comment-reply-btn:hover, .show-replies-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .comment-essay-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .comment-essay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .reply-form {
+            background: #f7fafc;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 14px;
+            display: none;
+        }
+
+        .reply-form.active {
+            display: block;
+        }
+
+        .replies-container {
+            margin-top: 18px;
+            padding-left: 35px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .reply-item {
+            background: #f7fafc;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .load-more-replies {
+            padding: 10px 20px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .load-more-replies:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .draft-item {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .draft-item:hover {
+            background: #f7fafc;
+            transform: translateX(5px);
+            border-color: #667eea;
+        }
+
+        .draft-info h4 {
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .draft-info p {
+            color: #a0aec0;
+            font-size: 12px;
+        }
+
+        .draft-delete {
+            padding: 8px 16px;
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .draft-delete:hover {
+            background: #c53030;
+        }
+
+        .response-indicator {
+            background: #ebf4ff;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border-left: 4px solid #667eea;
+        }
+
+        .response-indicator strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Container -->
+    <div class="auth-container" id="authContainer">
+        <h2 id="authTitle">Sign In</h2>
+        <form id="authForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="authSubmit">Sign In</button>
+            <button type="button" class="btn btn-google" id="googleSignIn">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Sign in with Google
+            </button>
+        </form>
+        <div class="toggle-auth">
+            <span id="toggleText">Don't have an account?</span>
+            <a href="#" id="toggleLink">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- User Info Setup -->
+    <div class="auth-container hidden" id="userInfoContainer">
+        <h2>Complete Your Profile</h2>
+        <form id="userInfoForm">
+            <div class="form-group">
+                <label for="displayName">Name</label>
+                <input type="text" id="displayName" required>
+            </div>
+            <div class="form-group">
+                <label for="credentials">Credentials (e.g., PhD, Writer, Student)</label>
+                <input type="text" id="credentials" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Continue to Dashboard</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="profile-section">
+                    <div class="profile-pic" id="profilePic">
+                        <span id="profileInitial">U</span>
+                    </div>
+                    <div class="profile-info">
+                        <div class="name" id="userDisplayName">User</div>
+                        <div class="credentials" id="userCredentials">Credentials</div>
+                    </div>
+                </div>
+                <div class="tabs">
+                    <button class="tab active" data-tab="editor">Write Article</button>
+                    <button class="tab" data-tab="feed">Feed</button>
+                </div>
+            </div>
+
+            <!-- Editor Section -->
+            <div class="editor-container" id="editorSection">
+                <div class="editor-toolbar">
+                    <button class="toolbar-btn" data-command="bold"><b>B</b></button>
+                    <button class="toolbar-btn" data-command="italic"><i>I</i></button>
+                    <button class="toolbar-btn" data-command="underline"><u>U</u></button>
+                    <button class="toolbar-btn" data-command="insertOrderedList">1. List</button>
+                    <button class="toolbar-btn" data-command="insertUnorderedList">• List</button>
+                    <button class="toolbar-btn" data-command="justifyLeft">Left</button>
+                    <button class="toolbar-btn" data-command="justifyCenter">Center</button>
+                    <button class="toolbar-btn" data-command="justifyRight">Right</button>
+                    <select class="toolbar-btn" id="fontSizeSelect">
+                        <option value="1">Small</option>
+                        <option value="3" selected>Normal</option>
+                        <option value="5">Large</option>
+                        <option value="7">Huge</option>
+                    </select>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <button class="toolbar-btn" id="insertImageBtn">📷 Image</button>
+                </div>
+                <div style="font-size: 12px; color: #718096; margin-bottom: 12px; padding: 8px 12px; background: #f7fafc; border-radius: 8px;">
+                    💡 <strong>Tip:</strong> Click images to select • Drag corner handles to resize • Drag image to move • Press Delete to remove
+                </div>
+                <div class="editor-content" contenteditable="true" id="articleEditor" data-placeholder="Start writing your article..."></div>
+                
+                <!-- Draft Info Display -->
+                <div id="currentDraftInfo" style="margin-top: 12px; padding: 10px 16px; background: #ebf4ff; border-radius: 8px; display: none; font-size: 14px; color: #2d3748;">
+                    <strong>Editing:</strong> <span id="currentDraftNameDisplay"></span>
+                </div>
+                
+                <div class="post-btn-container">
+                    <button class="btn btn-primary" id="loadDraftBtn" style="width: auto; padding: 12px 24px;">Load Draft</button>
+                    <button class="btn btn-primary" id="newDraftBtn" style="width: auto; padding: 12px 24px; background: #48bb78;">New Draft</button>
+                    <button class="btn btn-primary" id="saveDraftBtn" style="width: auto; padding: 12px 24px;">Save Draft</button>
+                    <button class="btn btn-primary" id="postArticleBtn" style="width: auto; padding: 14px 32px;">Post Article</button>
+                </div>
+            </div>
+
+            <!-- Feed Section -->
+            <div class="feed-container" id="feedSection">
+                <div id="articlesList"></div>
+                <button class="view-more-btn hidden" id="viewMoreBtn">View More</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Modal -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Publish Article</h3>
+                <button class="close-modal" id="closePostModal">&times;</button>
+            </div>
+            <div id="responseIndicator" class="response-indicator hidden">
+                <strong>Response to:</strong> <span id="responseToText"></span>
+            </div>
+            <form id="publishForm">
+                <div class="form-group">
+                    <label for="articleTitle">Article Title</label>
+                    <input type="text" id="articleTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="articleDesc">Brief Description</label>
+                    <textarea id="articleDesc" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Publish</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Save Draft Modal -->
+    <div class="modal" id="saveDraftModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Save Draft</h3>
+                <button class="close-modal" id="closeSaveDraftModal">&times;</button>
+            </div>
+            <form id="saveDraftForm">
+                <div class="form-group">
+                    <label for="draftName">Draft Name</label>
+                    <input type="text" id="draftName" required placeholder="Enter a name for this draft">
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load Draft Modal -->
+    <div class="modal" id="loadDraftModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>My Drafts</h3>
+                <button class="close-modal" id="closeLoadDraftModal">&times;</button>
+            </div>
+            <div id="draftsList"></div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Profile Settings</h3>
+                <button class="close-modal" id="closeProfileModal">&times;</button>
+            </div>
+            <div style="background: #ebf4ff; padding: 18px; border-radius: 12px; margin-bottom: 24px; font-size: 14px; color: #2d3748; line-height: 1.6;">
+                <strong>Privacy Notice:</strong> None of your information is collected beyond what's necessary for the platform. Your username, email, password, name, and credentials will be permanently deleted upon account deletion.
+            </div>
+            <div class="profile-options">
+                <button class="btn btn-primary" id="editInfoBtn">Edit Personal Information</button>
+                <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+                <button class="btn btn-primary" id="changeProfilePicBtn">Change Profile Picture</button>
+                <button class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+                <button class="btn" style="background: #a0aec0; color: white;" id="signOutBtn">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Info Modal -->
+    <div class="modal" id="editInfoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Information</h3>
+                <button class="close-modal" id="closeEditModal">&times;</button>
+            </div>
+            <form id="editInfoForm">
+                <div class="form-group">
+                    <label for="editDisplayName">Name</label>
+                    <input type="text" id="editDisplayName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCredentials">Credentials</label>
+                    <input type="text" id="editCredentials" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Article View Modal -->
+    <div class="modal" id="articleViewModal">
+        <div class="modal-content" style="max-width: 950px;">
+            <div style="display: flex; gap: 12px;">
+                <button class="back-btn" id="backToFeed">← Back to Feed</button>
+                <button class="delete-article-btn hidden" id="deleteArticleBtn">Delete Article</button>
+            </div>
+            <div class="article-view">
+                <div class="article-view-header">
+                    <div class="article-view-title" id="viewArticleTitle"></div>
+                    <div class="article-meta">
+                        <span id="viewArticleAuthor"></span>
+                        <span id="viewArticleDate"></span>
+                    </div>
+                    <div id="articleResponseInfo" class="response-indicator hidden" style="margin-top: 18px;"></div>
+                </div>
+                <div class="article-view-content" id="viewArticleContent"></div>
+                
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <div class="comments-header">Comments</div>
+                    
+                    <!-- Comment Essay Button -->
+                    <div style="margin-bottom: 24px;">
+                        <button class="comment-essay-btn" id="writeCommentEssayBtn">
+                            ✍️ Write Comment Essay on This Article
+                        </button>
+                    </div>
+                    
+                    <div class="comment-form">
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="commentText" rows="3" placeholder="Write your comment..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="submitCommentBtn">Post Comment</button>
+                    </div>
+                    
+                    <div id="commentsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="saving-indicator" id="savingIndicator">Saving...</div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, limit, startAfter, getDocs, deleteDoc, updateDoc, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBofqpbOXc803HjjTvwSmIZRl-kzz0hyBc",
+            authDomain: "articles-8ec5c.firebaseapp.com",
+            projectId: "articles-8ec5c",
+            storageBucket: "articles-8ec5c.firebasestorage.app",
+            messagingSenderId: "767951019496",
+            appId: "1:767951019496:web:0a151ef237351a7e1c585d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        let isSignUp = false;
+        let currentUser = null;
+        let saveTimeout = null;
+        let lastDoc = null;
+        let selectedRating = 0;
+        let currentArticleId = null;
+        let responseToArticle = null;
+        let selectedImage = null;
+        let currentDraftId = null;
+        let currentDraftName = null;
+        const ARTICLES_PER_PAGE = 30;
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function compressImage(base64, maxWidth = 800) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = base64;
+            });
+        }
+
+        const authContainer = document.getElementById('authContainer');
+        const userInfoContainer = document.getElementById('userInfoContainer');
+        const dashboard = document.getElementById('dashboard');
+        const authForm = document.getElementById('authForm');
+        const toggleLink = document.getElementById('toggleLink');
+        const googleSignInBtn = document.getElementById('googleSignIn');
+        const userInfoForm = document.getElementById('userInfoForm');
+        const articleEditor = document.getElementById('articleEditor');
+        const postArticleBtn = document.getElementById('postArticleBtn');
+        const postModal = document.getElementById('postModal');
+        const publishForm = document.getElementById('publishForm');
+        const profilePic = document.getElementById('profilePic');
+        const profileModal = document.getElementById('profileModal');
+        const savingIndicator = document.getElementById('savingIndicator');
+
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            isSignUp = !isSignUp;
+            document.getElementById('authTitle').textContent = isSignUp ? 'Sign Up' : 'Sign In';
+            document.getElementById('authSubmit').textContent = isSignUp ? 'Sign Up' : 'Sign In';
+            document.getElementById('toggleText').textContent = isSignUp ? 'Already have an account?' : "Don't have an account?";
+            toggleLink.textContent = isSignUp ? 'Sign In' : 'Sign Up';
+        });
+
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                if (isSignUp) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        googleSignInBtn.addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, googleProvider);
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        userInfoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const displayName = document.getElementById('displayName').value;
+            const credentials = document.getElementById('credentials').value;
+
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    displayName,
+                    credentials,
+                    email: currentUser.email,
+                    createdAt: new Date()
+                });
+                
+                userInfoContainer.classList.add('hidden');
+                showDashboard();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                
+                if (userDoc.exists()) {
+                    authContainer.classList.add('hidden');
+                    userInfoContainer.classList.add('hidden');
+                    showDashboard();
+                } else {
+                    authContainer.classList.add('hidden');
+                    userInfoContainer.classList.remove('hidden');
+                }
+            } else {
+                currentUser = null;
+                authContainer.classList.remove('hidden');
+                userInfoContainer.classList.add('hidden');
+                dashboard.style.display = 'none';
+            }
+        });
+
+        async function showDashboard() {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            const userData = userDoc.data();
+            
+            document.getElementById('userDisplayName').textContent = userData.displayName;
+            document.getElementById('userCredentials').textContent = userData.credentials;
+            document.getElementById('profileInitial').textContent = userData.displayName.charAt(0).toUpperCase();
+            
+            if (userData.profilePicBase64) {
+                document.getElementById('profilePic').innerHTML = `<img src="${userData.profilePicBase64}" alt="Profile">`;
+            }
+            
+            dashboard.style.display = 'block';
+            loadArticles();
+            
+            // Wrap any existing images in editor
+            setTimeout(() => {
+                wrapExistingImages();
+                setupImageInteractions();
+            }, 100);
+        }
+
+        document.querySelectorAll('.toolbar-btn[data-command]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const command = btn.dataset.command;
+                document.execCommand(command, false, null);
+                articleEditor.focus();
+            });
+        });
+
+        document.getElementById('fontSizeSelect').addEventListener('change', (e) => {
+            document.execCommand('fontSize', false, e.target.value);
+            articleEditor.focus();
+        });
+
+        document.getElementById('insertImageBtn').addEventListener('click', () => {
+            document.getElementById('imageInput').click();
+        });
+        /* --- REPLACE START: Image Handling Logic --- */
+        
+        // 1. Handle Image Upload & Insertion
+        document.getElementById('imageInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    const base64 = await fileToBase64(file);
+                    const compressed = await compressImage(base64);
+                    
+                    // Create the wrapper structure
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'img-wrapper';
+                    wrapper.contentEditable = 'false'; // Critical for dragging as a block
+                    
+                    // Create the image
+                    const img = document.createElement('img');
+                    img.src = compressed;
+                    img.style.width = '400px'; // Default starting size
+                    img.style.height = 'auto';
+                    wrapper.appendChild(img);
+
+                    // Create resize handles
+                    ['nw', 'ne', 'sw', 'se'].forEach(pos => {
+                        const handle = document.createElement('div');
+                        handle.className = `resize-handle ${pos}`;
+                        handle.dataset.position = pos;
+                        wrapper.appendChild(handle);
+                    });
+
+                    // Insert into editor at cursor position
+                    articleEditor.focus();
+                    const selection = window.getSelection();
+                    if (selection.rangeCount > 0) {
+                        const range = selection.getRangeAt(0);
+                        range.deleteContents();
+                        range.insertNode(wrapper);
+                        
+                        // Insert a space after to allow continuing typing
+                        const space = document.createTextNode('\u00A0');
+                        range.setStartAfter(wrapper);
+                        range.insertNode(space);
+                        range.setStartAfter(space);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    } else {
+                        articleEditor.appendChild(wrapper);
+                    }
+                    
+                    // Initialize interactions immediately
+                    setupImageInteractions();
+                    
+                    // Auto-select the new image
+                    selectImageWrapper(wrapper);
+                    
+                    e.target.value = ''; // Reset input
+                } catch (error) {
+                    alert('Error uploading image: ' + error.message);
+                }
+            }
+        });
+
+        // 2. Setup Drag, Drop, and Click Interactions
+        function setupImageInteractions() {
+            const wrappers = articleEditor.querySelectorAll('.img-wrapper');
+            
+            wrappers.forEach(wrapper => {
+                // Click to select
+                wrapper.onmousedown = (e) => {
+                    if (e.target.classList.contains('resize-handle')) return;
+                    e.stopPropagation(); // Prevent editor cursor placement logic
+                    selectImageWrapper(wrapper);
+                };
+
+                // Dragging logic
+                wrapper.draggable = true;
+                
+                wrapper.ondragstart = (e) => {
+                    selectedImage = wrapper;
+                    e.dataTransfer.effectAllowed = 'move';
+                    // We set a transparent image to avoid the default "ghost" being distracting if needed
+                    wrapper.style.opacity = '0.4';
+                };
+
+                wrapper.ondragend = (e) => {
+                    wrapper.style.opacity = '1';
+                    selectedImage = null;
+                };
+
+                // Resize handles logic
+                const handles = wrapper.querySelectorAll('.resize-handle');
+                handles.forEach(handle => {
+                    handle.onmousedown = (e) => {
+                        e.stopPropagation();
+                        e.preventDefault(); // Prevent text selection start
+                        startResize(e, wrapper, handle.dataset.position);
+                    };
+                });
+            });
+        }
+
+        // Handle Dropping (Moving the image)
+        articleEditor.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Allow drop
+            e.dataTransfer.dropEffect = 'move';
+        });
+
+        articleEditor.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (selectedImage && selectedImage.classList.contains('img-wrapper')) {
+                // Calculate drop position
+                let range;
+                if (document.caretRangeFromPoint) {
+                    range = document.caretRangeFromPoint(e.clientX, e.clientY);
+                } else if (document.caretPositionFromPoint) {
+                    const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+                    range = document.createRange();
+                    range.setStart(pos.offsetNode, pos.offset);
+                    range.collapse(true);
+                }
+
+                if (range) {
+                    // Move the actual DOM node
+                    range.insertNode(selectedImage);
+                    
+                    // Reset selection
+                    selectImageWrapper(selectedImage);
+                }
+            }
+        });
+
+        // 3. Selection Logic
+        function selectImageWrapper(wrapper) {
+            // Deselect others
+            articleEditor.querySelectorAll('.img-wrapper.selected').forEach(w => w.classList.remove('selected'));
+            // Select current
+            wrapper.classList.add('selected');
+            selectedImage = wrapper;
+        }
+
+        // 4. Resize Logic
+        let isResizing = false;
+        let startX, startY, startWidth, startHeight;
+        let activeWrapper = null;
+        let activeHandle = null;
+
+        function startResize(e, wrapper, handlePos) {
+            isResizing = true;
+            activeWrapper = wrapper;
+            activeHandle = handlePos;
+            const img = wrapper.querySelector('img');
+            
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = parseInt(document.defaultView.getComputedStyle(img).width, 10);
+            startHeight = parseInt(document.defaultView.getComputedStyle(img).height, 10);
+
+            document.documentElement.addEventListener('mousemove', doResize, false);
+            document.documentElement.addEventListener('mouseup', stopResize, false);
+        }
+
+        function doResize(e) {
+            if (!isResizing) return;
+
+            const img = activeWrapper.querySelector('img');
+            const deltaX = e.clientX - startX;
+            // Aspect ratio calculation could be added here if desired
+            
+            let newWidth = startWidth;
+
+            if (activeHandle.includes('e')) {
+                newWidth = startWidth + deltaX;
+            } else if (activeHandle.includes('w')) {
+                newWidth = startWidth - deltaX;
+            }
+
+            // Enforce minimum size
+            if (newWidth > 50) {
+                img.style.width = `${newWidth}px`;
+                img.style.height = 'auto'; // Maintain aspect ratio
+            }
+        }
+
+        function stopResize() {
+            isResizing = false;
+            activeWrapper = null;
+            activeHandle = null;
+            document.documentElement.removeEventListener('mousemove', doResize, false);
+            document.documentElement.removeEventListener('mouseup', stopResize, false);
+        }
+
+        /* --- REPLACE END --- */
+
+        // Wrap existing images that aren't wrapped
+        function wrapExistingImages() {
+            const unwrappedImages = articleEditor.querySelectorAll('img:not(.img-wrapper img)');
+            
+            unwrappedImages.forEach(img => {
+                // Skip if already wrapped
+                if (img.parentElement && img.parentElement.classList.contains('img-wrapper')) {
+                    return;
+                }
+                
+                // Create wrapper
+                const wrapper = document.createElement('div');
+                wrapper.className = 'img-wrapper';
+                wrapper.contentEditable = 'false';
+                wrapper.style.display = 'inline-block';
+                wrapper.style.position = 'relative';
+                
+                // Add resize handles
+                ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(pos => {
+                    const handle = document.createElement('div');
+                    handle.className = `resize-handle ${pos}`;
+                    handle.dataset.position = pos;
+                    wrapper.appendChild(handle);
+                });
+                
+                // Wrap the image
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+            });
+        }
+
+        // Click outside to deselect
+        articleEditor.addEventListener('click', (e) => {
+            if (!e.target.closest('.img-wrapper')) {
+                articleEditor.querySelectorAll('.img-wrapper').forEach(w => w.classList.remove('selected'));
+                selectedImage = null;
+            }
+        });
+
+        // Delete key to remove selected image
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'Delete' || e.key === 'Backspace') && selectedImage && selectedImage.classList.contains('img-wrapper')) {
+                e.preventDefault();
+                selectedImage.remove();
+                selectedImage = null;
+            }
+        });
+
+        // Setup images on content load
+        articleEditor.addEventListener('input', () => {
+            wrapExistingImages();
+            setupImageInteractions();
+            
+            // Auto-save if editing an existing draft
+            if (currentDraftId) {
+                clearTimeout(saveTimeout);
+                savingIndicator.textContent = 'Saving...';
+                savingIndicator.classList.add('show');
+                
+                saveTimeout = setTimeout(async () => {
+                    try {
+                        await updateDoc(doc(db, 'drafts', currentDraftId), {
+                            content: articleEditor.innerHTML,
+                            savedAt: new Date(),
+                            timestamp: Date.now()
+                        });
+                        savingIndicator.textContent = 'Saved';
+                        setTimeout(() => {
+                            savingIndicator.classList.remove('show');
+                        }, 1500);
+                    } catch (error) {
+                        savingIndicator.textContent = 'Error saving';
+                    }
+                }, 1500);
+            }
+        });
+
+        // Handle paste events to wrap images
+        articleEditor.addEventListener('paste', () => {
+            setTimeout(() => {
+                wrapExistingImages();
+                setupImageInteractions();
+            }, 100);
+        });
+
+        // Save Draft
+        document.getElementById('saveDraftBtn').addEventListener('click', () => {
+            if (!articleEditor.innerHTML.trim()) {
+                alert('Please write something before saving!');
+                return;
+            }
+            
+            // If editing an existing draft, update it directly
+            if (currentDraftId) {
+                updateExistingDraft();
+            } else {
+                // Otherwise, show modal to create new draft
+                document.getElementById('saveDraftModal').classList.add('active');
+            }
+        });
+
+        async function updateExistingDraft() {
+            try {
+                await updateDoc(doc(db, 'drafts', currentDraftId), {
+                    content: articleEditor.innerHTML,
+                    savedAt: new Date(),
+                    timestamp: Date.now()
+                });
+                
+                savingIndicator.textContent = 'Draft saved!';
+                savingIndicator.classList.add('show');
+                setTimeout(() => {
+                    savingIndicator.classList.remove('show');
+                }, 2000);
+            } catch (error) {
+                alert('Error saving draft: ' + error.message);
+            }
+        }
+
+        // New Draft Button
+        document.getElementById('newDraftBtn').addEventListener('click', () => {
+            if (articleEditor.innerHTML.trim()) {
+                if (confirm('Start a new draft? Any unsaved changes to the current draft will be lost.')) {
+                    articleEditor.innerHTML = '';
+                    currentDraftId = null;
+                    currentDraftName = null;
+                    document.getElementById('currentDraftInfo').style.display = 'none';
+                }
+            } else {
+                articleEditor.innerHTML = '';
+                currentDraftId = null;
+                currentDraftName = null;
+                document.getElementById('currentDraftInfo').style.display = 'none';
+            }
+        });
+
+        document.getElementById('saveDraftForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const draftName = document.getElementById('draftName').value;
+
+            try {
+                const docRef = await addDoc(collection(db, 'drafts'), {
+                    userId: currentUser.uid,
+                    name: draftName,
+                    content: articleEditor.innerHTML,
+                    savedAt: new Date(),
+                    timestamp: Date.now()
+                });
+                
+                // Set current draft ID and name
+                currentDraftId = docRef.id;
+                currentDraftName = draftName;
+                
+                // Show draft info
+                document.getElementById('currentDraftInfo').style.display = 'block';
+                document.getElementById('currentDraftNameDisplay').textContent = draftName;
+                
+                document.getElementById('saveDraftModal').classList.remove('active');
+                document.getElementById('draftName').value = '';
+                alert('Draft saved successfully!');
+            } catch (error) {
+                alert('Error saving draft: ' + error.message);
+            }
+        });
+
+        // Load Draft
+        document.getElementById('loadDraftBtn').addEventListener('click', async () => {
+            const draftsList = document.getElementById('draftsList');
+            draftsList.innerHTML = '';
+
+            try {
+                const q = query(
+                    collection(db, 'drafts'),
+                    where('userId', '==', currentUser.uid)
+                );
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    draftsList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 24px;">No drafts saved</p>';
+                } else {
+                    const drafts = [];
+                    snapshot.forEach((doc) => {
+                        drafts.push({ id: doc.id, data: doc.data() });
+                    });
+                    drafts.sort((a, b) => b.data.timestamp - a.data.timestamp);
+
+                    drafts.forEach(({ id, data: draft }) => {
+                        const draftItem = document.createElement('div');
+                        draftItem.className = 'draft-item';
+                        draftItem.innerHTML = `
+                            <div class="draft-info">
+                                <h4>${draft.name}</h4>
+                                <p>Saved: ${new Date(draft.timestamp).toLocaleString()}</p>
+                            </div>
+                            <button class="draft-delete" data-id="${id}">Delete</button>
+                        `;
+                        
+                        draftItem.querySelector('.draft-info').addEventListener('click', () => {
+                            articleEditor.innerHTML = draft.content;
+                            currentDraftId = id;
+                            currentDraftName = draft.name;
+                            
+                            // Show draft info
+                            document.getElementById('currentDraftInfo').style.display = 'block';
+                            document.getElementById('currentDraftNameDisplay').textContent = draft.name;
+                            
+                            document.getElementById('loadDraftModal').classList.remove('active');
+                            
+                            // Wrap any unwrapped images
+                            setTimeout(() => {
+                                wrapExistingImages();
+                                setupImageInteractions();
+                            }, 100);
+                        });
+
+                        draftItem.querySelector('.draft-delete').addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            if (confirm('Delete this draft?')) {
+                                try {
+                                    const draftId = e.target.dataset.id;
+                                    await deleteDoc(doc(db, 'drafts', draftId));
+                                    draftItem.remove();
+                                    
+                                    // If deleting the currently edited draft, clear editor
+                                    if (currentDraftId === draftId) {
+                                        articleEditor.innerHTML = '';
+                                        currentDraftId = null;
+                                        currentDraftName = null;
+                                        document.getElementById('currentDraftInfo').style.display = 'none';
+                                    }
+                                    
+                                    if (draftsList.children.length === 0) {
+                                        draftsList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 24px;">No drafts saved</p>';
+                                    }
+                                } catch (error) {
+                                    alert('Error deleting draft: ' + error.message);
+                                }
+                            }
+                        });
+
+                        draftsList.appendChild(draftItem);
+                    });
+                }
+
+                document.getElementById('loadDraftModal').classList.add('active');
+            } catch (error) {
+                alert('Error loading drafts: ' + error.message);
+            }
+        });
+
+        postArticleBtn.addEventListener('click', () => {
+            if (articleEditor.innerHTML.trim()) {
+                postModal.classList.add('active');
+                if (responseToArticle) {
+                    document.getElementById('responseIndicator').classList.remove('hidden');
+                    document.getElementById('responseToText').textContent = responseToArticle.title;
+                } else {
+                    document.getElementById('responseIndicator').classList.add('hidden');
+                }
+            } else {
+                alert('Please write something before posting!');
+            }
+        });
+
+        publishForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('articleTitle').value;
+            const description = document.getElementById('articleDesc').value;
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            const userData = userDoc.data();
+
+            try {
+                const articleData = {
+                    title,
+                    description,
+                    content: articleEditor.innerHTML,
+                    authorId: currentUser.uid,
+                    authorName: userData.displayName,
+                    authorCredentials: userData.credentials,
+                    createdAt: new Date(),
+                    timestamp: Date.now()
+                };
+
+                if (responseToArticle) {
+                    articleData.responseToId = responseToArticle.id;
+                    articleData.responseToTitle = responseToArticle.title;
+                    articleData.title = `Response to: ${responseToArticle.title}: ${title}`;
+                }
+
+                await addDoc(collection(db, 'articles'), articleData);
+
+                articleEditor.innerHTML = '';
+                responseToArticle = null;
+                currentDraftId = null;
+                currentDraftName = null;
+                document.getElementById('currentDraftInfo').style.display = 'none';
+                postModal.classList.remove('active');
+                document.getElementById('articleTitle').value = '';
+                document.getElementById('articleDesc').value = '';
+                alert('Article published successfully!');
+                loadArticles();
+            } catch (error) {
+                alert('Error publishing article: ' + error.message);
+            }
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabName = tab.dataset.tab;
+                if (tabName === 'editor') {
+                    document.getElementById('editorSection').style.display = 'block';
+                    document.getElementById('feedSection').style.display = 'none';
+                } else {
+                    document.getElementById('editorSection').style.display = 'none';
+                    document.getElementById('feedSection').style.display = 'block';
+                    loadArticles();
+                }
+            });
+        });
+
+        async function loadArticles(loadMore = false) {
+            const articlesList = document.getElementById('articlesList');
+            
+            if (!loadMore) {
+                articlesList.innerHTML = '';
+                lastDoc = null;
+            }
+
+            try {
+                let q;
+                if (lastDoc) {
+                    q = query(
+                        collection(db, 'articles'),
+                        orderBy('timestamp', 'desc'),
+                        startAfter(lastDoc),
+                        limit(ARTICLES_PER_PAGE)
+                    );
+                } else {
+                    q = query(
+                        collection(db, 'articles'),
+                        orderBy('timestamp', 'desc'),
+                        limit(ARTICLES_PER_PAGE)
+                    );
+                }
+
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty && !loadMore) {
+                    articlesList.innerHTML = '<div class="no-articles">No articles present</div>';
+                    document.getElementById('viewMoreBtn').classList.add('hidden');
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const article = doc.data();
+                    const articleCard = document.createElement('div');
+                    articleCard.className = 'article-card';
+                    articleCard.innerHTML = `
+                        <div class="article-title">${article.title}</div>
+                        <div class="article-description">${article.description}</div>
+                        <div class="article-meta">
+                            <span><strong>${article.authorName}</strong> - ${article.authorCredentials}</span>
+                            <span>${new Date(article.timestamp).toLocaleString()}</span>
+                        </div>
+                    `;
+                    articleCard.addEventListener('click', () => viewArticle(doc.id, article));
+                    articlesList.appendChild(articleCard);
+                });
+
+                lastDoc = snapshot.docs[snapshot.docs.length - 1];
+                
+                if (snapshot.docs.length === ARTICLES_PER_PAGE) {
+                    document.getElementById('viewMoreBtn').classList.remove('hidden');
+                } else {
+                    document.getElementById('viewMoreBtn').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                articlesList.innerHTML = '<div class="no-articles">Error loading articles</div>';
+            }
+        }
+
+        document.getElementById('viewMoreBtn').addEventListener('click', () => {
+            loadArticles(true);
+        });
+
+        async function viewArticle(id, article) {
+            currentArticleId = id;
+            document.getElementById('viewArticleTitle').textContent = article.title;
+            document.getElementById('viewArticleAuthor').textContent = `By ${article.authorName}, ${article.authorCredentials}`;
+            document.getElementById('viewArticleDate').textContent = new Date(article.timestamp).toLocaleString();
+            document.getElementById('viewArticleContent').innerHTML = article.content;
+
+            if (article.responseToTitle) {
+                document.getElementById('articleResponseInfo').classList.remove('hidden');
+                document.getElementById('articleResponseInfo').innerHTML = `<strong>This is a response to:</strong> ${article.responseToTitle}`;
+            } else {
+                document.getElementById('articleResponseInfo').classList.add('hidden');
+            }
+
+            if (article.authorId === currentUser.uid) {
+                document.getElementById('deleteArticleBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('deleteArticleBtn').classList.add('hidden');
+            }
+
+            selectedRating = 0;
+            document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+            document.getElementById('commentText').value = '';
+            
+            document.getElementById('writeCommentEssayBtn').onclick = () => {
+                responseToArticle = { id: id, title: article.title };
+                document.getElementById('articleViewModal').classList.remove('active');
+                document.querySelectorAll('.tab')[0].click();
+                articleEditor.innerHTML = '';
+                articleEditor.focus();
+            };
+            
+            loadComments(id);
+            document.getElementById('articleViewModal').classList.add('active');
+        }
+
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                document.querySelectorAll('.star').forEach(s => {
+                    if (parseInt(s.dataset.rating) <= selectedRating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+
+            star.addEventListener('mouseenter', () => {
+                const rating = parseInt(star.dataset.rating);
+                document.querySelectorAll('.star').forEach(s => {
+                    if (parseInt(s.dataset.rating) <= rating) {
+                        s.style.color = '#fbbf24';
+                    } else {
+                        s.style.color = '#e2e8f0';
+                    }
+                });
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', () => {
+            document.querySelectorAll('.star').forEach(s => {
+                if (parseInt(s.dataset.rating) <= selectedRating) {
+                    s.style.color = '#fbbf24';
+                } else {
+                    s.style.color = '#e2e8f0';
+                }
+            });
+        });
+
+        document.getElementById('submitCommentBtn').addEventListener('click', async () => {
+            const commentText = document.getElementById('commentText').value.trim();
+            
+            if (!commentText) {
+                alert('Please write a comment');
+                return;
+            }
+            
+            if (selectedRating === 0) {
+                alert('Please select a star rating');
+                return;
+            }
+
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            const userData = userDoc.data();
+
+            try {
+                await addDoc(collection(db, 'comments'), {
+                    articleId: currentArticleId,
+                    parentCommentId: null,
+                    userId: currentUser.uid,
+                    userName: userData.displayName,
+                    userCredentials: userData.credentials,
+                    text: commentText,
+                    rating: selectedRating,
+                    timestamp: Date.now(),
+                    createdAt: new Date()
+                });
+
+                document.getElementById('commentText').value = '';
+                selectedRating = 0;
+                document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+                loadComments(currentArticleId);
+            } catch (error) {
+                alert('Error posting comment: ' + error.message);
+            }
+        });
+
+        async function loadComments(articleId) {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = '';
+
+            try {
+                const q = query(
+                    collection(db, 'comments'),
+                    where('articleId', '==', articleId),
+                    where('parentCommentId', '==', null)
+                );
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    commentsList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 24px;">No comments yet</p>';
+                } else {
+                    const comments = [];
+                    snapshot.forEach((doc) => {
+                        comments.push({ id: doc.id, data: doc.data() });
+                    });
+                    comments.sort((a, b) => b.data.timestamp - a.data.timestamp);
+
+                    for (const { id, data: comment } of comments) {
+                        const commentItem = document.createElement('div');
+                        commentItem.className = 'comment-item';
+                        
+                        const stars = '★'.repeat(comment.rating) + '☆'.repeat(5 - comment.rating);
+                        
+                        commentItem.innerHTML = `
+                            <div class="comment-header">
+                                <div>
+                                    <div class="comment-author">${comment.userName} - ${comment.userCredentials}</div>
+                                    <div class="comment-stars">${stars}</div>
+                                </div>
+                                <div class="comment-date">${new Date(comment.timestamp).toLocaleString()}</div>
+                            </div>
+                            <div class="comment-text">${comment.text}</div>
+                            <div class="comment-actions">
+                                <button class="comment-reply-btn" data-comment-id="${id}">Reply</button>
+                            </div>
+                            <div class="reply-form" id="reply-form-${id}">
+                                <div class="form-group">
+                                    <textarea id="reply-text-${id}" rows="2" placeholder="Write your reply..."></textarea>
+                                </div>
+                                <button class="btn btn-primary" style="width: auto; padding: 10px 20px;" data-comment-id="${id}" class="submit-reply-btn">Post Reply</button>
+                                <button class="btn" style="width: auto; padding: 10px 20px; background: #a0aec0; color: white; margin-left: 12px;" onclick="document.getElementById('reply-form-${id}').classList.remove('active')">Cancel</button>
+                            </div>
+                            <div class="replies-container" id="replies-${id}"></div>
+                        `;
+
+                        const repliesQuery = query(
+                            collection(db, 'comments'),
+                            where('parentCommentId', '==', id)
+                        );
+                        const repliesSnapshot = await getDocs(repliesQuery);
+                        
+                        if (!repliesSnapshot.empty) {
+                            const showRepliesBtn = document.createElement('button');
+                            showRepliesBtn.className = 'show-replies-btn';
+                            showRepliesBtn.textContent = `Show Replies (${repliesSnapshot.size})`;
+                            showRepliesBtn.dataset.commentId = id;
+                            showRepliesBtn.dataset.shown = 'false';
+                            commentItem.querySelector('.comment-actions').appendChild(showRepliesBtn);
+                        }
+
+                        commentItem.querySelector('.comment-reply-btn').addEventListener('click', () => {
+                            const replyForm = document.getElementById(`reply-form-${id}`);
+                            replyForm.classList.toggle('active');
+                        });
+
+                        commentItem.querySelector('.reply-form .btn-primary').addEventListener('click', async (e) => {
+                            const commentId = e.target.dataset.commentId;
+                            const replyText = document.getElementById(`reply-text-${commentId}`).value.trim();
+                            
+                            if (!replyText) {
+                                alert('Please write a reply');
+                                return;
+                            }
+
+                            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                            const userData = userDoc.data();
+
+                            try {
+                                await addDoc(collection(db, 'comments'), {
+                                    articleId: currentArticleId,
+                                    parentCommentId: commentId,
+                                    userId: currentUser.uid,
+                                    userName: userData.displayName,
+                                    userCredentials: userData.credentials,
+                                    text: replyText,
+                                    rating: 0,
+                                    timestamp: Date.now(),
+                                    createdAt: new Date()
+                                });
+
+                                document.getElementById(`reply-text-${commentId}`).value = '';
+                                document.getElementById(`reply-form-${commentId}`).classList.remove('active');
+                                loadComments(currentArticleId);
+                            } catch (error) {
+                                alert('Error posting reply: ' + error.message);
+                            }
+                        });
+
+                        const showRepliesBtn = commentItem.querySelector('.show-replies-btn');
+                        if (showRepliesBtn) {
+                            showRepliesBtn.addEventListener('click', () => {
+                                loadReplies(id, showRepliesBtn);
+                            });
+                        }
+
+                        commentsList.appendChild(commentItem);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                commentsList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 24px;">Error loading comments</p>';
+            }
+        }
+
+        async function loadReplies(commentId, button) {
+            const repliesContainer = document.getElementById(`replies-${commentId}`);
+            const isShown = button.dataset.shown === 'true';
+
+            if (isShown) {
+                repliesContainer.innerHTML = '';
+                button.textContent = button.textContent.replace('Hide', 'Show');
+                button.dataset.shown = 'false';
+            } else {
+                button.textContent = button.textContent.replace('Show', 'Hide');
+                button.dataset.shown = 'true';
+                
+                try {
+                    const q = query(
+                        collection(db, 'comments'),
+                        where('parentCommentId', '==', commentId)
+                    );
+                    const snapshot = await getDocs(q);
+                    
+                    const replies = [];
+                    snapshot.forEach((doc) => {
+                        replies.push({ id: doc.id, data: doc.data() });
+                    });
+                    replies.sort((a, b) => b.data.timestamp - a.data.timestamp);
+
+                    repliesContainer.innerHTML = '';
+                    const repliesToShow = replies.slice(0, 5);
+                    
+                    repliesToShow.forEach(({ id, data: reply }) => {
+                        const replyItem = document.createElement('div');
+                        replyItem.className = 'reply-item';
+                        replyItem.innerHTML = `
+                            <div class="comment-header">
+                                <div class="comment-author">${reply.userName} - ${reply.userCredentials}</div>
+                                <div class="comment-date">${new Date(reply.timestamp).toLocaleString()}</div>
+                            </div>
+                            <div class="comment-text">${reply.text}</div>
+                        `;
+                        repliesContainer.appendChild(replyItem);
+                    });
+
+                    if (replies.length > 5) {
+                        const loadMoreBtn = document.createElement('button');
+                        loadMoreBtn.className = 'load-more-replies';
+                        loadMoreBtn.textContent = `Load More Replies (${replies.length - 5} remaining)`;
+                        loadMoreBtn.dataset.commentId = commentId;
+                        loadMoreBtn.dataset.offset = '5';
+                        loadMoreBtn.dataset.total = replies.length.toString();
+                        
+                        loadMoreBtn.addEventListener('click', () => {
+                            loadMoreReplies(commentId, replies, loadMoreBtn);
+                        });
+                        
+                        repliesContainer.appendChild(loadMoreBtn);
+                    }
+                } catch (error) {
+                    console.error('Error loading replies:', error);
+                }
+            }
+        }
+
+        function loadMoreReplies(commentId, allReplies, button) {
+            const repliesContainer = document.getElementById(`replies-${commentId}`);
+            const offset = parseInt(button.dataset.offset);
+            const nextReplies = allReplies.slice(offset, offset + 5);
+            
+            button.remove();
+            
+            nextReplies.forEach(({ id, data: reply }) => {
+                const replyItem = document.createElement('div');
+                replyItem.className = 'reply-item';
+                replyItem.innerHTML = `
+                    <div class="comment-header">
+                        <div class="comment-author">${reply.userName} - ${reply.userCredentials}</div>
+                        <div class="comment-date">${new Date(reply.timestamp).toLocaleString()}</div>
+                    </div>
+                    <div class="comment-text">${reply.text}</div>
+                `;
+                repliesContainer.appendChild(replyItem);
+            });
+
+            const newOffset = offset + 5;
+            if (newOffset < allReplies.length) {
+                button.dataset.offset = newOffset.toString();
+                button.textContent = `Load More Replies (${allReplies.length - newOffset} remaining)`;
+                repliesContainer.appendChild(button);
+            }
+        }
+
+        document.getElementById('deleteArticleBtn').addEventListener('click', async () => {
+            if (confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+                try {
+                    await deleteDoc(doc(db, 'articles', currentArticleId));
+                    
+                    const commentsQuery = query(collection(db, 'comments'), where('articleId', '==', currentArticleId));
+                    const commentsSnapshot = await getDocs(commentsQuery);
+                    const deletePromises = [];
+                    commentsSnapshot.forEach((docSnapshot) => {
+                        deletePromises.push(deleteDoc(doc(db, 'comments', docSnapshot.id)));
+                    });
+                    await Promise.all(deletePromises);
+
+                    document.getElementById('articleViewModal').classList.remove('active');
+                    alert('Article deleted successfully');
+                    loadArticles();
+                } catch (error) {
+                    alert('Error deleting article: ' + error.message);
+                }
+            }
+        });
+
+        document.getElementById('backToFeed').addEventListener('click', () => {
+            document.getElementById('articleViewModal').classList.remove('active');
+        });
+
+        profilePic.addEventListener('click', () => {
+            profileModal.classList.add('active');
+        });
+
+        document.getElementById('closeProfileModal').addEventListener('click', () => {
+            profileModal.classList.remove('active');
+        });
+
+        document.getElementById('closePostModal').addEventListener('click', () => {
+            postModal.classList.remove('active');
+        });
+
+        document.getElementById('closeSaveDraftModal').addEventListener('click', () => {
+            document.getElementById('saveDraftModal').classList.remove('active');
+        });
+
+        document.getElementById('closeLoadDraftModal').addEventListener('click', () => {
+            document.getElementById('loadDraftModal').classList.remove('active');
+        });
+
+        document.getElementById('changeProfilePicBtn').addEventListener('click', () => {
+            document.getElementById('profilePicInput').click();
+        });
+
+        document.getElementById('profilePicInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    const base64 = await fileToBase64(file);
+                    const compressed = await compressImage(base64, 200);
+                    
+                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                        profilePicBase64: compressed
+                    });
+                    
+                    document.getElementById('profilePic').innerHTML = `<img src="${compressed}" alt="Profile">`;
+                    alert('Profile picture updated!');
+                } catch (error) {
+                    alert('Error updating profile picture: ' + error.message);
+                }
+            }
+        });
+
+        document.getElementById('editInfoBtn').addEventListener('click', async () => {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            const userData = userDoc.data();
+            
+            document.getElementById('editDisplayName').value = userData.displayName;
+            document.getElementById('editCredentials').value = userData.credentials;
+            
+            profileModal.classList.remove('active');
+            document.getElementById('editInfoModal').classList.add('active');
+        });
+
+        document.getElementById('closeEditModal').addEventListener('click', () => {
+            document.getElementById('editInfoModal').classList.remove('active');
+        });
+
+        document.getElementById('editInfoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const displayName = document.getElementById('editDisplayName').value;
+            const credentials = document.getElementById('editCredentials').value;
+
+            try {
+                await updateDoc(doc(db, 'users', currentUser.uid), {
+                    displayName,
+                    credentials
+                });
+                
+                document.getElementById('userDisplayName').textContent = displayName;
+                document.getElementById('userCredentials').textContent = credentials;
+                document.getElementById('profileInitial').textContent = displayName.charAt(0).toUpperCase();
+                
+                document.getElementById('editInfoModal').classList.remove('active');
+                alert('Profile updated successfully!');
+            } catch (error) {
+                alert('Error updating profile: ' + error.message);
+            }
+        });
+
+        document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.')) {
+                if (confirm('This will delete ALL your articles, drafts, comments, and personal information. Are you absolutely sure?')) {
+                    try {
+                        await deleteDoc(doc(db, 'users', currentUser.uid));
+                        
+                        const draftsQuery = query(collection(db, 'drafts'), where('userId', '==', currentUser.uid));
+                        const draftsSnapshot = await getDocs(draftsQuery);
+                        const deletePromises = [];
+                        draftsSnapshot.forEach((docSnapshot) => {
+                            deletePromises.push(deleteDoc(doc(db, 'drafts', docSnapshot.id)));
+                        });
+
+                        const articlesQuery = query(collection(db, 'articles'), where('authorId', '==', currentUser.uid));
+                        const articlesSnapshot = await getDocs(articlesQuery);
+                        articlesSnapshot.forEach((docSnapshot) => {
+                            deletePromises.push(deleteDoc(doc(db, 'articles', docSnapshot.id)));
+                        });
+
+                        const commentsQuery = query(collection(db, 'comments'), where('userId', '==', currentUser.uid));
+                        const commentsSnapshot = await getDocs(commentsQuery);
+                        commentsSnapshot.forEach((docSnapshot) => {
+                            deletePromises.push(deleteDoc(doc(db, 'comments', docSnapshot.id)));
+                        });
+
+                        await Promise.all(deletePromises);
+                        await deleteUser(currentUser);
+                        
+                        alert('Account deleted successfully');
+                    } catch (error) {
+                        alert('Error deleting account: ' + error.message);
+                    }
+                }
+            }
+        });
+
+        document.getElementById('signOutBtn').addEventListener('click', async () => {
+            if (confirm('Are you sure you want to sign out?')) {
+                await signOut(auth);
+                profileModal.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
